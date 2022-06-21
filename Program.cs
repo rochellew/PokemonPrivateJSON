@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿// using this API: https://pokeapi.co/
+
+using System.Text.Json;
 using TestingPokemon;
 using ConsoleTables;
 
