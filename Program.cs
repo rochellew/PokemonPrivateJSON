@@ -2,6 +2,7 @@
 using System.Text.Json;
 using TestingPokemon;
 using ConsoleTables;
+using System.Net;
 
 namespace TestingPokemon
 {
@@ -9,6 +10,7 @@ namespace TestingPokemon
     {
         static void Main(string[] args)
         {
+            TestWeb();
             var root = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString();
             var filePath = root + $"{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}sableye.json";
             var dataPath = root + $"{Path.DirectorySeparatorChar}Data";
@@ -55,6 +57,24 @@ namespace TestingPokemon
             }
 
             Console.WriteLine(table);
+        }
+
+        static  void TestWeb()
+        {
+            string jsonString = string.Empty;
+            string url = "https://www.googleapis.com/books/v1/volumes?q=Dracula+inauthor:stoker+isbn:0307743306&key=AIzaSyBnAMHA93pXeI9rlEGD8m0uBLZOttTcBa4";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.AutomaticDecompression = DecompressionMethods.GZip;
+
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                jsonString = reader.ReadToEnd();
+            }
+
+            Console.WriteLine(jsonString);
         }
     }
 }
