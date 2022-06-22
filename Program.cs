@@ -10,7 +10,7 @@ namespace TestingPokemon
     {
         static void Main(string[] args)
         {
-            TestWeb();
+            
             var root = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.ToString();
             var filePath = root + $"{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}sableye.json";
             var dataPath = root + $"{Path.DirectorySeparatorChar}Data";
@@ -21,7 +21,7 @@ namespace TestingPokemon
                 fileNames.Add(fileName);
             }
 
-
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             List<Pokemon> pokedex = new List<Pokemon>();
             foreach (var fileName in fileNames)
             {
@@ -31,10 +31,13 @@ namespace TestingPokemon
                     jsonString = sr.ReadToEnd();
                 }
 
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                
                 var pokemon = JsonSerializer.Deserialize<Pokemon>(jsonString, options);
                 pokedex.Add(pokemon);
             }
+            Console.WriteLine("Enter the name of a pokemon: ");
+            string pokemonName = Console.ReadLine();
+            pokedex.Add(JsonSerializer.Deserialize<Pokemon>(TestWeb(pokemonName), options));
 
             ConsoleTable table = new ConsoleTable("Name", "Types", "Abilities");
 
@@ -59,10 +62,12 @@ namespace TestingPokemon
             Console.WriteLine(table);
         }
 
-        static  void TestWeb()
+        static string TestWeb(string pokemonName)
         {
             string jsonString = string.Empty;
-            string url = "https://www.googleapis.com/books/v1/volumes?q=Dracula+inauthor:stoker+isbn:0307743306&key=AIzaSyBnAMHA93pXeI9rlEGD8m0uBLZOttTcBa4";
+            //string url = "https://www.googleapis.com/books/v1/volumes?q=Dracula+inauthor:stoker+isbn:0307743306&key=AIzaSyBnAMHA93pXeI9rlEGD8m0uBLZOttTcBa4";
+            var url = $"https://pokeapi.co/api/v2/pokemon/{pokemonName}";
+
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.AutomaticDecompression = DecompressionMethods.GZip;
@@ -74,7 +79,7 @@ namespace TestingPokemon
                 jsonString = reader.ReadToEnd();
             }
 
-            Console.WriteLine(jsonString);
+            return jsonString;
         }
     }
 }
