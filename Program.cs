@@ -1,6 +1,5 @@
 ﻿// using this API: https://pokeapi.co/
 using System.Text.Json;
-using TestingPokemon;
 using ConsoleTables;
 using System.Net;
 
@@ -23,6 +22,7 @@ namespace TestingPokemon
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             List<Pokemon> pokedex = new List<Pokemon>();
+
             foreach (var fileName in fileNames)
             {
                 string jsonString;
@@ -30,11 +30,10 @@ namespace TestingPokemon
                 {
                     jsonString = sr.ReadToEnd();
                 }
-
-                
                 var pokemon = JsonSerializer.Deserialize<Pokemon>(jsonString, options);
                 pokedex.Add(pokemon);
             }
+
             Console.WriteLine("Enter the name of a pokemon: ");
             string pokemonName = Console.ReadLine();
             pokedex.Add(JsonSerializer.Deserialize<Pokemon>(TestWeb(pokemonName), options));
